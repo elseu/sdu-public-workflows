@@ -1,8 +1,7 @@
 name: Sync main to develop
+
 on:
   workflow_call:
-    secrets:
-        GITHUB_TOKEN
 
 jobs:
   sync-branches:

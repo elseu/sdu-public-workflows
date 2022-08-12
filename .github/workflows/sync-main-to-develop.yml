@@ -2,6 +2,17 @@ name: Sync main to develop
 
 on:
   workflow_call:
+    inputs:
+        from_branch:
+            description: 'The name of the trunk-branch, default: main'
+            default: 'main'
+            required: false
+            type: string
+        to_branch:
+            description: 'The name of the develop-branch, default: develop'
+            default: 'develop'
+            required: false
+            type: string
 
 jobs:
   sync-branches:
@@ -19,9 +30,9 @@ jobs:
         uses: tretuna/sync-branches@1.4.0
         with:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          FROM_BRANCH: "main"
-          TO_BRANCH: "develop"
-          PULL_REQUEST_BODY: "Merge changes from `main` to `develop`. \n\n ⚠️ Please be aware! **MERGE** this PR, no _rebase_ - otherwise semantic versioning can become screwed!!!"
+          FROM_BRANCH: ${{ inputs.from_branch }}
+          TO_BRANCH: ${{ inputs.to_branch }}
+          PULL_REQUEST_BODY: "Merge changes from `${{ inputs.from_branch }}` to `${{ inputs.to_branch }}`. \n\n ⚠️ Please be aware! **MERGE** this PR, no _rebase_ - otherwise semantic versioning can become screwed!!!"
 
           # the PR-url is accessible with ${{jobs.pull.outputs.PULL_REQUEST_URL}}
           # optionally we could add Slack integration

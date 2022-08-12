@@ -1,0 +1,28 @@
+name: Sync main to develop
+on:
+  workflow_call:
+    secrets:
+        GITHUB_TOKEN
+
+jobs:
+  sync-branches:
+    runs-on: ubuntu-latest
+    name: Syncing branches
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18
+      - name: Opening pull request
+        id: pull
+        uses: tretuna/sync-branches@1.4.0
+        with:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          FROM_BRANCH: "main"
+          TO_BRANCH: "develop"
+          PULL_REQUEST_BODY: "Merge changes from `main` to `develop`. \n\n ⚠️ Please be aware! **MERGE** this PR, no _rebase_ - otherwise semantic versioning can become screwed!!!"
+
+          # the PR-url is accessible with ${{jobs.pull.outputs.PULL_REQUEST_URL}}
+          # optionally we could add Slack integration

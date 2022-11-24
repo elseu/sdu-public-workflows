@@ -6,9 +6,13 @@ inputs:
     description: 'The Github Personal Access Token to access npm'
     required: true
   node_version:
-    description: 'Possible node version'
+    description: 'Possible node version (default: 18)'
     required: false
     default: 18
+  cache_path:
+    description: 'Path to be cached (default: node_modules)'
+    default: node_modules
+    required: false
 
 runs:
   using: "composite"
@@ -35,7 +39,7 @@ runs:
       uses: actions/cache@v3
       id: cache
       with:
-        path: node_modules
+        path: ${{ inputs.cache_path }}
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
 

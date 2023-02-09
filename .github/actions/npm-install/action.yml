@@ -3,14 +3,14 @@ description: Download npm and run npm install
 
 inputs:
   npm_token:
-    description: 'The Github Personal Access Token to access npm'
+    description: "The Github Personal Access Token to access npm"
     required: true
   node_version:
-    description: 'Possible node version (default: 18)'
+    description: "Possible node version (default: 18)"
     required: false
     default: 18
   cache_path:
-    description: 'Path to be cached (default: node_modules)'
+    description: "Path to be cached (default: node_modules)"
     default: node_modules
     required: false
 
@@ -24,15 +24,9 @@ runs:
     - uses: actions/setup-node@v3
       with:
         node-version: ${{ inputs.node_version }}
-
-    # restore possible cached .npm
-    - name: Cache npm downloads
-      uses: actions/cache@v3
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-npm-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-npm
+        scope: "@elseu"
+        registry-url: https://npm.pkg.github.com/
+        cache: "npm"
 
     # restore possible cached node_modules
     - name: Cache node modules
@@ -42,23 +36,13 @@ runs:
         path: ${{ inputs.cache_path }}
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
-
     #####
     # steps below will only be ran if there was no cache #
     #####
-
-    # authenticate npm for consuming and publishing packages from and to the GitHub Package Registry
-    - uses: jgierer12/npm-auth-gpr@v1
-      if: steps.cache.outputs.cache-hit != 'true'
-      with:
-        token: ${{ inputs.npm_token }}
-
-    - name: Setup NPM Registry
-      if: steps.cache.outputs.cache-hit != 'true'
-      run: npm config set @elseu:registry https://npm.pkg.github.com/
-      shell: bash
 
     - name: NPM install
       if: steps.cache.outputs.cache-hit != 'true'
       run: npm ci
       shell: bash
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.npm_token }}

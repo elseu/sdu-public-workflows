@@ -29,7 +29,7 @@ jobs:
 
       - name: Opening pull request
         id: pull
-        uses: skarnl/sync-branches@main
+        uses: skarnl/sync-branches@v1.4.1
         with:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           FROM_BRANCH: ${{ inputs.from_branch }}

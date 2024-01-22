@@ -1,0 +1,14 @@
+apiVersion: backstage.io/v1beta1
+kind: Component
+metadata:
+  name: sdu-public-workflows
+  description: "Collection of shared workflows (be aware, this repository is public)"
+  annotations:
+    github.com/project-slug: elseu/sdu-public-workflows
+    backstage.io/source-location: url:https://github.com/elseu/sdu-public-workflows/
+  tags:
+    - other
+spec:
+  type: workflow
+  owner: team-devops
+  lifecycle: development-only
